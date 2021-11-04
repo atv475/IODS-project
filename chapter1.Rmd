@@ -1,6 +1,5 @@
 
 # Thoughts about IODS2021 
-## by Ari Voutilainen
 
 ```{r}
 
