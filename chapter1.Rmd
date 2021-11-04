@@ -1,13 +1,24 @@
 
-# About the project
-
-*Write a short description about the course and add a link to your GitHub repository here. This is an R Markdown (.Rmd) file so you should use R Markdown syntax.*
+# Thoughts about IODS2021 
+## by Ari Voutilainen
 
 ```{r}
-# This is a so-called "R chunk" where you can write R code.
 
 date()
 
 ```
-The text continues here.
+I noticed this course last year when it advertised itself in UEF’s Yammer.
+
+So far, I have carried out the following tasks:
+
+1. I watched the webinars by Garrett Grolemund regarding RStudio and GitHub.
+2. I installed R, RStudio, and Git to my computer.
+3. I created an account on GitHub, a GitHub repository for the IODS-project [https://github.com/atv475/IODS-project], and a course diary web page [https://atv475.github.io/IODS-project/].
+4. I successfully completed R Short and Sweet on Nov 2, 2021.
+
+*Now I am learning R Markdown*. At first, I struggled with it but, fortunately, I found some informative YouTube videos that showed me the very basics. I have never used R Markdown before.
+
+The structure of IODS2021 is well-thought and clear so I believe the course will flow smoothly. However, I expected to hear more about **the reasoning of the course**. Why Open Data Science is important, and why should we learn these technical skills, such as RStudio?
+
+
 
