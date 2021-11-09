@@ -14,7 +14,7 @@ date()
 
 *#LRN14 consists of 183 rows and 60 columns. #The last four columns are entitled as follows: Age, Attitude, Points, and gender.*
 
-*#Creating variables deep, stra, and surf.*
+*#Creating variables deep, stra, surf, and atti.*
 
 - library(dplyr)
 - deep_questions <- c("D03", "D11", "D19", "D27", "D07", "D14", "D22", "D30","D06",  "D15", "D23", "D31")
@@ -26,12 +26,13 @@ date()
 - surface_questions <- c("SU02","SU10","SU18","SU26", "SU05","SU13","SU21","SU29","SU08","SU16","SU24","SU32")
 - surface_columns <- select(lrn14, one_of(surface_questions))
 - lrn14$surf <- rowMeans(surface_columns)
+- lrn14$atti <- lrn14$Attitude / 10
 
 *#I found the name of the one_of function misleading. It does not select just one but all.*
 
 *#Creating an analysis data set.*
 
-- keep_columns <- c("gender","Age","Attitude", "deep", "stra", "surf", "Points")
+- keep_columns <- c("gender","Age","atti", "deep", "stra", "surf", "Points")
 - learning2014 <- select(lrn14, one_of(keep_columns))
 - learning2014 <- filter(learning2014, Points > 0)
 
@@ -79,11 +80,23 @@ library(readr)
 setwd("C:/Users/ariv/Documents/IODS-project/IODS-project/data")
 learning2014 <- read_csv("learning2014.csv", 
     col_types = cols(...1 = col_skip(), gender = col_factor(levels = c("F", 
-        "M")), Age = col_number(), Attitude = col_number(), 
+        "M")), Age = col_number(), atti = col_number(), 
         deep = col_number(), stra = col_number(), 
         surf = col_number(), Points = col_number()))
 View(learning2014)
+summary(learning2014$gender)
+summary(learning2014$Age)
+summary(learning2014$atti)
+summary(learning2014$deep)
+summary(learning2014$stra)
+summary(learning2014$surf)
+summary(learning2014$Points)
+```
+
+Of the 166 students, 110 were female. The mean (range) age of students was 25.5 (17-55) years. Their global attitude toward statistics ranged from 1.4 to 5.0 with a mean value of 3.1. Variables describing deep, strategic, and surface learning resulted in the following mean (range) values, respectively: 3.7 (1.6-4.9), 3.1 (1.3-5.0), and 2.8 (1.6-4.3). In the variables reflecting attitude and learning strategies, the scale ranged from 1 to 5.
+
+```{r}
 pairs(learning2014[-1])
 ```
 
-
+Based on a visual inspection of the scatter plot matrix, exam points correlated most evidently with students' attitude.
