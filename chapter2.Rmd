@@ -1,30 +1,29 @@
 
 ## Regression and model validation
 
-```{r echo=FALSE}
+```{r}
 
 date()
 
 ```
 **First, I carried out the data wrangling exercise and created the following R script.**
 
-#Ari Voutilainen
-#November 9, 2021
-#R script for data wrangling in IODS2021 Exercise 2.
+*#Ari Voutilainen #November 9, 2021. #R script for data wrangling in IODS2021 Exercise 2.*
 
-lrn14 <- read.table("http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt", sep="\t", header=TRUE)
-dim(lrn14)
-str(lrn14)
+- lrn14 <- read.table("http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt", sep="\t", header=TRUE)
 
-#LRN14 consists of 183 rows and 60 columns.
-#The last four columns are entitled as follows: Age, Attitude, Points, and gender.
+- dim(lrn14)
+- str(lrn14)
 
-#Creating variables deep, stra, and surf.
-library(dplyr)
+*#LRN14 consists of 183 rows and 60 columns. #The last four columns are entitled as follows: Age, Attitude, Points, and gender.*
 
-deep_questions <- c("D03", "D11", "D19", "D27", "D07", "D14", "D22", "D30","D06",  "D15", "D23", "D31")
-deep_columns <- select(lrn14, one_of(deep_questions))
-lrn14$deep <- rowMeans(deep_columns)
+*#Creating variables deep, stra, and surf.*
+
+- library(dplyr)
+
+- deep_questions <- c("D03", "D11", "D19", "D27", "D07", "D14", "D22", "D30","D06",  "D15", "D23", "D31")
+- deep_columns <- select(lrn14, one_of(deep_questions))
+- lrn14$deep <- rowMeans(deep_columns)
 
 strategic_questions <- c("ST01","ST09","ST17","ST25","ST04","ST12","ST20","ST28")
 strategic_columns <- select(lrn14, one_of(strategic_questions))
@@ -52,8 +51,22 @@ getwd()
 #Saving the analysis data set.
 ?write.csv
 write.csv(learning2014, file = "learning2014.csv")
-read.csv
+read.csv("learning2014.csv")
 str(learning2014)
 head(learning2014)
 
 **Second, I read the learning2014 data into R.**
+
+setwd("C:/Users/ariv/Documents/IODS-project/IODS-project/data")
+
+read.csv("learning2014.csv")
+
+dim(learning2014)
+str(learning2014)
+head(learning2014)
+
+The *learning2014* data set describes students in the Introduction to Social Statistics course in 2014. The number of students is 166, and all of them participated the course exam.
+
+The *learning2014* data set consists of seven variables:
+
+
