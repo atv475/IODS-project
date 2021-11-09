@@ -2,9 +2,7 @@
 ## Thoughts about IODS2021 
 
 ```{r}
-
 date()
-
 ```
 I noticed this course last year when it advertised itself in UEF’s Yammer.
 

@@ -2,11 +2,9 @@
 ## Regression and model validation
 
 ```{r}
-
 date()
-
 ```
-**First, I carried out the data wrangling exercise and created the following R script.**
+**FIRST, I carried out the data wrangling exercise and created the following R script.**
 
 *#Ari Voutilainen #November 9, 2021. #R script for data wrangling in IODS2021 Exercise 2.*
 
@@ -54,7 +52,7 @@ date()
 - str(learning2014)
 - head(learning2014)
 
-**Second, I read the learning2014 data into R.**
+**SECOND, I explored the structure of the learning2014 data set.**
 
 - setwd("C:/Users/ariv/Documents/IODS-project/IODS-project/data")
 - read.csv("learning2014.csv")
@@ -73,4 +71,19 @@ The **learning2014** data set consists of seven variables:
 5. Mean answer to questions reflecting *strategic learning*.
 6. Mean answer to questions reflecting *surface learning*.
 7. *Points* achieved in the exam.
+
+**THIRD, I explored the variables of the learning2014 data in more detail.**
+
+```{r}
+library(readr)
+setwd("C:/Users/ariv/Documents/IODS-project/IODS-project/data")
+learning2014 <- read_csv("learning2014.csv", 
+    col_types = cols(...1 = col_skip(), gender = col_factor(levels = c("F", 
+        "M")), Age = col_number(), Attitude = col_number(), 
+        deep = col_number(), stra = col_number(), 
+        surf = col_number(), Points = col_number()))
+View(learning2014)
+pairs(learning2014[-1])
+```
+
 
