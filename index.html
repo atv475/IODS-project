@@ -174,8 +174,8 @@ pre code {
 <li><a href="#introduction-to-open-data-science---course-project">Introduction to Open Data Science - Course Project</a>
 <ul>
 <li><a href="#thoughts-about-iods2021">Thoughts about IODS2021</a></li>
+<li><a href="#regression-and-model-validation">Regression and model validation</a></li>
 </ul></li>
-<li><a href="#insert-chapter-2-title-here">Insert chapter 2 title here</a></li>
 </ul>
 </div>
 
@@ -185,7 +185,7 @@ pre code {
 <div id="thoughts-about-iods2021" class="section level2">
 <h2>Thoughts about IODS2021</h2>
 <pre class="r"><code>date()</code></pre>
-<pre><code>## [1] &quot;Tue Nov 09 09:36:03 2021&quot;</code></pre>
+<pre><code>## [1] &quot;Tue Nov 09 09:49:11 2021&quot;</code></pre>
 <p>I noticed this course last year when it advertised itself in UEF’s Yammer.</p>
 <p>So far, I have carried out the following tasks:</p>
 <ol style="list-style-type: decimal">
@@ -198,20 +198,33 @@ pre code {
 <p>The structure of IODS2021 is well-thought and clear so I believe the course will flow smoothly. However, I expected to hear more about <strong>the reasoning of the course</strong>. Why Open Data Science is important, and why should we learn these technical skills, such as RStudio?</p>
 <hr />
 </div>
-</div>
-<div id="insert-chapter-2-title-here" class="section level1">
-<h1>Insert chapter 2 title here</h1>
+<div id="regression-and-model-validation" class="section level2">
+<h2>Regression and model validation</h2>
+<pre class="r"><code>date()</code></pre>
+<pre><code>## [1] &quot;Tue Nov 09 09:49:11 2021&quot;</code></pre>
+<p>First, I carried out the data wrangling exercise. My R script was as follows:</p>
+<p>#Ari Voutilainen #November 9, 2021 #R script for data wrangling in IODS2021 Exercise 2.</p>
+<p>lrn14 &lt;- read.table(“<a href="http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt" class="uri">http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt</a>”, sep=&quot;, header=TRUE) dim(lrn14) str(lrn14)</p>
+<p>#LRN14 consists of 183 rows and 60 columns. #The last four columns are entitled as follows: Age, Attitude, Points, and gender.</p>
+<p>#Creating variables deep, stra, and surf. library(dplyr)</p>
+<p>deep_questions &lt;- c(“D03”, “D11”, “D19”, “D27”, “D07”, “D14”, “D22”, “D30”,“D06”, “D15”, “D23”, “D31”) deep_columns &lt;- select(lrn14, one_of(deep_questions)) lrn14$deep &lt;- rowMeans(deep_columns)</p>
+<p>strategic_questions &lt;- c(“ST01”,“ST09”,“ST17”,“ST25”,“ST04”,“ST12”,“ST20”,“ST28”) strategic_columns &lt;- select(lrn14, one_of(strategic_questions)) lrn14$stra &lt;- rowMeans(strategic_columns)</p>
+<p>surface_questions &lt;- c(“SU02”,“SU10”,“SU18”,“SU26”, “SU05”,“SU13”,“SU21”,“SU29”,“SU08”,“SU16”,“SU24”,“SU32”) surface_columns &lt;- select(lrn14, one_of(surface_questions)) lrn14$surf &lt;- rowMeans(surface_columns)</p>
+<p>#I found the name of the one_of function misleading. It does not select just one but all.</p>
+<p>#Creating an analysis data set. keep_columns &lt;- c(“gender”,“Age”,“Attitude”, “deep”, “stra”, “surf”, “Points”) learning2014 &lt;- select(lrn14, one_of(keep_columns)) learning2014 &lt;- filter(learning2014, Points &gt; 0)</p>
+<p>#Now the analysis data set consists of 166 rows and 7 columns.</p>
+<p>#Setting the working directory. setwd(“C:/Users/ariv/Documents/IODS-project/IODS-project/data”) getwd()</p>
+<p>#Obs! There is an IODS-project folder inside an IODS-project folder on purpose.</p>
+<p>#Saving the analysis data set. ?write.csv write.csv(learning2014, file = “learning2014.csv”) read.csv str(learning2014) head(learning2014)</p>
 <p><em>Describe the work you have done this week and summarize your learning.</em></p>
 <ul>
 <li>Describe your work and results clearly.</li>
 <li>Assume the reader has an introductory course level understanding of writing and reading R code as well as statistical methods.</li>
 <li>Assume the reader has no previous knowledge of your data or the more advanced methods you are using.</li>
 </ul>
-<pre class="r"><code>date()</code></pre>
-<pre><code>## [1] &quot;Tue Nov 09 09:36:03 2021&quot;</code></pre>
-<p>Here we go again…</p>
 <hr />
 <p>(more chapters to be added similarly as we proceed with the course!)</p>
+</div>
 </div>
 
 
