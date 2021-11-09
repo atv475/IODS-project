@@ -1,7 +1,7 @@
 
 ## Regression and model validation
 
-```{r date(), echo=FALSE}
+```{r echo=FALSE}
 
 date()
 
