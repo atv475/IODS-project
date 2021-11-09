@@ -6,7 +6,7 @@
 date()
 
 ```
-First, I carried out the data wrangling exercise. My R script was as follows:
+**First, I carried out the data wrangling exercise and created the following R script.**
 
 #Ari Voutilainen
 #November 9, 2021
@@ -56,8 +56,4 @@ read.csv
 str(learning2014)
 head(learning2014)
 
-*Describe the work you have done this week and summarize your learning.*
-
-- Describe your work and results clearly. 
-- Assume the reader has an introductory course level understanding of writing and reading R code as well as statistical methods.
-- Assume the reader has no previous knowledge of your data or the more advanced methods you are using.
+**Second, I read the learning2014 data into R.**
