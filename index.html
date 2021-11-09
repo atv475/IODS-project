@@ -185,7 +185,7 @@ pre code {
 <div id="thoughts-about-iods2021" class="section level2">
 <h2>Thoughts about IODS2021</h2>
 <pre class="r"><code>date()</code></pre>
-<pre><code>## [1] &quot;Tue Nov 09 12:34:26 2021&quot;</code></pre>
+<pre><code>## [1] &quot;Tue Nov 09 13:06:10 2021&quot;</code></pre>
 <p>I noticed this course last year when it advertised itself in UEF’s Yammer.</p>
 <p>So far, I have carried out the following tasks:</p>
 <ol style="list-style-type: decimal">
@@ -201,36 +201,69 @@ pre code {
 <div id="regression-and-model-validation" class="section level2">
 <h2>Regression and model validation</h2>
 <pre class="r"><code>date()</code></pre>
-<pre><code>## [1] &quot;Tue Nov 09 12:34:26 2021&quot;</code></pre>
+<pre><code>## [1] &quot;Tue Nov 09 13:06:10 2021&quot;</code></pre>
 <p><strong>First, I carried out the data wrangling exercise and created the following R script.</strong></p>
 <p><em>#Ari Voutilainen #November 9, 2021. #R script for data wrangling in IODS2021 Exercise 2.</em></p>
 <ul>
-<li><p>lrn14 &lt;- read.table(“<a href="http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt" class="uri">http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt</a>”, sep=&quot;, header=TRUE)</p></li>
-<li><p>dim(lrn14)</p></li>
-<li><p>str(lrn14)</p></li>
+<li>lrn14 &lt;- read.table(“<a href="http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt" class="uri">http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt</a>”, sep=&quot;, header=TRUE)</li>
+<li>dim(lrn14)</li>
+<li>str(lrn14)</li>
 </ul>
 <p><em>#LRN14 consists of 183 rows and 60 columns. #The last four columns are entitled as follows: Age, Attitude, Points, and gender.</em></p>
 <p><em>#Creating variables deep, stra, and surf.</em></p>
 <ul>
-<li><p>library(dplyr)</p></li>
-<li><p>deep_questions &lt;- c(“D03”, “D11”, “D19”, “D27”, “D07”, “D14”, “D22”, “D30”,“D06”, “D15”, “D23”, “D31”)</p></li>
-<li><p>deep_columns &lt;- select(lrn14, one_of(deep_questions))</p></li>
-<li><p>lrn14$deep &lt;- rowMeans(deep_columns)</p></li>
+<li>library(dplyr)</li>
+<li>deep_questions &lt;- c(“D03”, “D11”, “D19”, “D27”, “D07”, “D14”, “D22”, “D30”,“D06”, “D15”, “D23”, “D31”)</li>
+<li>deep_columns &lt;- select(lrn14, one_of(deep_questions))</li>
+<li>lrn14$deep &lt;- rowMeans(deep_columns)</li>
+<li>strategic_questions &lt;- c(“ST01”,“ST09”,“ST17”,“ST25”,“ST04”,“ST12”,“ST20”,“ST28”)</li>
+<li>strategic_columns &lt;- select(lrn14, one_of(strategic_questions))</li>
+<li>lrn14$stra &lt;- rowMeans(strategic_columns)</li>
+<li>surface_questions &lt;- c(“SU02”,“SU10”,“SU18”,“SU26”, “SU05”,“SU13”,“SU21”,“SU29”,“SU08”,“SU16”,“SU24”,“SU32”)</li>
+<li>surface_columns &lt;- select(lrn14, one_of(surface_questions))</li>
+<li>lrn14$surf &lt;- rowMeans(surface_columns)</li>
 </ul>
-<p>strategic_questions &lt;- c(“ST01”,“ST09”,“ST17”,“ST25”,“ST04”,“ST12”,“ST20”,“ST28”) strategic_columns &lt;- select(lrn14, one_of(strategic_questions)) lrn14$stra &lt;- rowMeans(strategic_columns)</p>
-<p>surface_questions &lt;- c(“SU02”,“SU10”,“SU18”,“SU26”, “SU05”,“SU13”,“SU21”,“SU29”,“SU08”,“SU16”,“SU24”,“SU32”) surface_columns &lt;- select(lrn14, one_of(surface_questions)) lrn14$surf &lt;- rowMeans(surface_columns)</p>
-<p>#I found the name of the one_of function misleading. It does not select just one but all.</p>
-<p>#Creating an analysis data set. keep_columns &lt;- c(“gender”,“Age”,“Attitude”, “deep”, “stra”, “surf”, “Points”) learning2014 &lt;- select(lrn14, one_of(keep_columns)) learning2014 &lt;- filter(learning2014, Points &gt; 0)</p>
-<p>#Now the analysis data set consists of 166 rows and 7 columns.</p>
-<p>#Setting the working directory. setwd(“C:/Users/ariv/Documents/IODS-project/IODS-project/data”) getwd()</p>
-<p>#Obs! There is an IODS-project folder inside an IODS-project folder on purpose.</p>
-<p>#Saving the analysis data set. ?write.csv write.csv(learning2014, file = “learning2014.csv”) read.csv(“learning2014.csv”) str(learning2014) head(learning2014)</p>
+<p><em>#I found the name of the one_of function misleading. It does not select just one but all.</em></p>
+<p><em>#Creating an analysis data set.</em></p>
+<ul>
+<li>keep_columns &lt;- c(“gender”,“Age”,“Attitude”, “deep”, “stra”, “surf”, “Points”)</li>
+<li>learning2014 &lt;- select(lrn14, one_of(keep_columns))</li>
+<li>learning2014 &lt;- filter(learning2014, Points &gt; 0)</li>
+</ul>
+<p><em>#Now the analysis data set consists of 166 rows and 7 columns.</em></p>
+<p><em>#Setting the working directory.</em></p>
+<ul>
+<li>setwd(“C:/Users/ariv/Documents/IODS-project/IODS-project/data”)</li>
+<li>getwd()</li>
+</ul>
+<p><em>#Obs! There is an IODS-project folder inside an IODS-project folder on purpose.</em></p>
+<p><em>#Saving the analysis data set.</em></p>
+<ul>
+<li>?write.csv</li>
+<li>write.csv(learning2014, file = “learning2014.csv”)</li>
+<li>read.csv(“learning2014.csv”)</li>
+<li>str(learning2014)</li>
+<li>head(learning2014)</li>
+</ul>
 <p><strong>Second, I read the learning2014 data into R.</strong></p>
-<p>setwd(“C:/Users/ariv/Documents/IODS-project/IODS-project/data”)</p>
-<p>read.csv(“learning2014.csv”)</p>
-<p>dim(learning2014) str(learning2014) head(learning2014)</p>
-<p>The <em>learning2014</em> data set describes students in the Introduction to Social Statistics course in 2014. The number of students is 166, and all of them participated the course exam.</p>
-<p>The <em>learning2014</em> data set consists of seven variables:</p>
+<ul>
+<li>setwd(“C:/Users/ariv/Documents/IODS-project/IODS-project/data”)</li>
+<li>read.csv(“learning2014.csv”)</li>
+<li>dim(learning2014)</li>
+<li>str(learning2014)</li>
+<li>head(learning2014)</li>
+</ul>
+<p>The <strong>learning2014</strong> data set describes students in the Introduction to Social Statistics course in 2014. The number of students is 166, and all of them participated in the course exam.</p>
+<p>The <strong>learning2014</strong> data set consists of seven variables:</p>
+<ol style="list-style-type: decimal">
+<li><em>Gender</em>.</li>
+<li><em>Age</em> in years.</li>
+<li>Global <em>attitude</em> toward statistics.</li>
+<li>Mean answer to questions reflecting <em>deep learning</em>.</li>
+<li>Mean answer to questions reflecting <em>strategic learning</em>.</li>
+<li>Mean answer to questions reflecting <em>surface learning</em>.</li>
+<li><em>Points</em> achieved in the exam.</li>
+</ol>
 <hr />
 <p>(more chapters to be added similarly as we proceed with the course!)</p>
 </div>
