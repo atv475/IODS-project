@@ -6,6 +6,8 @@ date()
 ```
 **FIRST, I carried out the data wrangling exercise and created the following R script.**
 
+*This corresponds to the data wrangling part of Exercise 2.*
+
 *#Ari Voutilainen #November 9, 2021. #R script for data wrangling in IODS2021 Exercise 2.*
 
 - lrn14 <- read.table("http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt", sep="\t", header=TRUE)
@@ -54,6 +56,8 @@ date()
 
 **SECOND, I explored the structure of the learning2014 data set.**
 
+*This corresponds to the data analysis part of Exercise 2, its 1. task.*
+
 - setwd("C:/Users/ariv/Documents/IODS-project/IODS-project/data")
 - read.csv("learning2014.csv")
 - dim(learning2014)
@@ -73,6 +77,8 @@ The **learning2014** data set consists of seven variables:
 7. *Points* achieved in the exam.
 
 **THIRD, I explored the variables of the learning2014 data in more detail.**
+
+*This corresponds to the data analysis part of Exercise 2, its 2. task.*
 
 ```{r}
 library(readr)
@@ -102,7 +108,9 @@ Based on a visual inspection of the scatter plot matrix, exam points correlated 
 
 **FOURTH, I fitted a linear regression model with exam points as a target variable.**
 
-To select the explanatory variables to the model I created a plot matrix.
+*This corresponds to the data analysis part of Exercise 2, its 3. and 4. tasks.*
+
+To select explanatory variables to the model I created a plot matrix.
 
 ```{r}
 library(GGally)
@@ -123,5 +131,20 @@ my_model2 <- lm(Points ~ atti, data = learning2014)
 summary(my_model2)
 ```
 
-The equation of the model is: y = 11.6 + 3.5 * attitude. The equation indicates that when a student's attitude increases with 1 in a scale from 1 to 5, his/her exam points increases with 3.5 points. For example, if the attitude is 1, the expected exam points are 15 and, correspondingly, when the attitude is 5, the expected exam points are 29.  Based on the model, attitude explains 19% of the variation in exam points (R2 = 0.19).
+The equation of the model is: y = 11.6 + 3.5 * attitude. The equation indicates that when a student's attitude increases with 1 in a scale from 1 to 5, his/her exam points increases with 3.5 points. For example, if the attitude is 1, the expected exam points are 15 and, correspondingly, when the attitude is 5, the expected exam points are 29.  Based on the model, attitude explains 19% of the variation in exam points (R^2^ = 0.19).
 
+**FIFTH, I produced diagnostic plots for the model.**
+
+*This corresponds to the data analysis part of Exercise 2, its 5. task.*
+
+```{r}
+?plot.lm
+par(mfrow = c(2,2))
+plot(my_model2, which = c(1,2,5))
+```
+
+Based on the scatter plot of **model residuals versus model predictions**, model errors had constant variance. The size of the error did not depend on the explanatory variable. The plot showed no patterns but a random spread of errors.
+
+Based on the **Q-Q-plot**, model errors were normally distributed with a mean value of 0. The plot showed a reasonable fit of errors with the straight line.
+
+Based on the plot of **residuals versus leverage**, there were no single observations with exceptionally high impact on the model results.
