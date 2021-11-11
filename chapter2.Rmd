@@ -1,5 +1,5 @@
 
-## Regression and model validation
+## Linear regression and model validation
 
 ```{r}
 date()
@@ -99,3 +99,29 @@ pairs(learning2014[-1])
 ```
 
 Based on a visual inspection of the scatter plot matrix, exam points correlated most evidently with students' attitude.
+
+**FOURTH, I fitted a linear regression model with exam points as a target variable.**
+
+To select the explanatory variables to the model I created a plot matrix.
+
+```{r}
+library(GGally)
+ggpairs(learning2014[-1], lower = list(combo = wrap("facethist", bins = 20)))
+```
+
+Based on correlations of potential explanatory variables with the target variable together with a visual inspection of the plot matrix I selected attitude, strategic learning, and surface learning as explanatory variables.
+
+```{r}
+my_model1 <- lm(Points ~ atti + stra + surf, data = learning2014)
+summary(my_model1)
+```
+
+As attitude was the only explanatory variable with p-value <0.05, I excluded strategic and surface learning from the model and fitted a new model with attitude as an explanatory variable.
+
+```{r}
+my_model2 <- lm(Points ~ atti, data = learning2014)
+summary(my_model2)
+```
+
+The equation of the model is: y = 11.6 + 3.5 * attitude. The equation indicates that when a student's attitude increases with 1 in a scale from 1 to 5, his/her exam points increases with 3.5 points. For example, if the attitude is 1, the expected exam points are 15 and, correspondingly, when the attitude is 5, the expected exam points are 29.  Based on the model, attitude explains 19% of the variation in exam points (R2 = 0.19).
+
