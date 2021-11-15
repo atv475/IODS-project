@@ -49,11 +49,12 @@ alc$alc_use
 alc$high_use
 
 #Saving the alc data set to the 'data' folder.
-glimpse(alc)
-
-#There are now 370 rows (students) and 35 columns (variables) in the alc data set.
 write.csv(alc, file = "alc.csv")
 read.csv("alc.csv")
 str(alc)
 head(alc)
 colnames(alc)
+glimpse(alc)
+
+#There are now 370 rows (students) and 35 columns (variables) in the alc data set.
+
