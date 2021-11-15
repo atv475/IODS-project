@@ -1,0 +1,7 @@
+
+## Logistic regression and cross-validation
+
+```{r}
+date()
+```
+**FIRST, I created a new R Markdown file**, named it as 'chapter3.Rmd', and saved it to my folder. Then, I included the new file as a child file in my 'index.Rmd' file.
