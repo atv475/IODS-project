@@ -12,7 +12,7 @@ colnames(mat)
 por <- read.table("student-por.csv", sep = ";", header=TRUE)
 colnames(por)
 
-#Joining the mat and por data sets.
+#Joining the 'mat' and 'por' data sets.
 library(dplyr)
 join_by <- c("school","sex","age","address","famsize","Pstatus","Medu","Fedu","Mjob","Fjob","reason","guardian","traveltime","studytime","schoolsup","famsup","activities","nursery","higher","internet","romantic","famrel","freetime","goout","Dalc","Walc","health")
 mat_por <- inner_join(mat, por, by = join_by)
