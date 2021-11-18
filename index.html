@@ -186,7 +186,7 @@ pre code {
 <div id="thoughts-about-iods2021" class="section level2">
 <h2>Thoughts about IODS2021</h2>
 <pre class="r"><code>date()</code></pre>
-<pre><code>## [1] &quot;Thu Nov 18 14:46:22 2021&quot;</code></pre>
+<pre><code>## [1] &quot;Thu Nov 18 15:12:53 2021&quot;</code></pre>
 <p>I noticed this course last year when it advertised itself in UEF’s Yammer.</p>
 <p>So far, I have carried out the following tasks:</p>
 <ol style="list-style-type: decimal">
@@ -202,7 +202,7 @@ pre code {
 <div id="linear-regression-and-model-validation" class="section level2">
 <h2>Linear regression and model validation</h2>
 <pre class="r"><code>date()</code></pre>
-<pre><code>## [1] &quot;Thu Nov 18 14:46:22 2021&quot;</code></pre>
+<pre><code>## [1] &quot;Thu Nov 18 15:12:53 2021&quot;</code></pre>
 <p><strong>FIRST, I carried out the data wrangling exercise and created the following R script.</strong></p>
 <p><em>This corresponds to the data wrangling part of Exercise 2.</em></p>
 <p><em>#Ari Voutilainen #November 9, 2021. #R script for data wrangling in IODS2021 Exercise 2.</em></p>
@@ -374,7 +374,7 @@ plot(my_model2, which = c(1,2,5))</code></pre>
 <div id="logistic-regression-and-cross-validation" class="section level2">
 <h2>Logistic regression and cross-validation</h2>
 <pre class="r"><code>date()</code></pre>
-<pre><code>## [1] &quot;Thu Nov 18 14:46:29 2021&quot;</code></pre>
+<pre><code>## [1] &quot;Thu Nov 18 15:13:00 2021&quot;</code></pre>
 <p><strong>FIRST, I created a new R Markdown file</strong>, named it as ‘chapter3.Rmd’, and saved it to my folder. Then, I included the new file as a child file in my ‘index.Rmd’ file.</p>
 <p><strong>SECOND, I read the joined and modified ‘alc’ data into R from my local folder, and described it briefly.</strong></p>
 <pre class="r"><code>library(readr)
@@ -547,15 +547,28 @@ alc$guesspred &lt;- ifelse(alc$guessprop &gt; 0.5, &quot;TRUE&quot;,&quot;FALSE&
 table(high_use = alc$high_use, prediction = alc$guesspred)</code></pre>
 <pre><code>##         prediction
 ## high_use FALSE TRUE
-##    FALSE   118  141
-##    TRUE     56   55</code></pre>
+##    FALSE   136  123
+##    TRUE     62   49</code></pre>
 <pre class="r"><code>table(high_use = alc$high_use, prediction = alc$guesspred) %&gt;% prop.table %&gt;% addmargins</code></pre>
 <pre><code>##         prediction
 ## high_use     FALSE      TRUE       Sum
-##    FALSE 0.3189189 0.3810811 0.7000000
-##    TRUE  0.1513514 0.1486486 0.3000000
-##    Sum   0.4702703 0.5297297 1.0000000</code></pre>
+##    FALSE 0.3675676 0.3324324 0.7000000
+##    TRUE  0.1675676 0.1324324 0.3000000
+##    Sum   0.5351351 0.4648649 1.0000000</code></pre>
 <p>In the guessing example, the <strong>training error</strong> was (124+54)/(135+124+54+57)*100 = 48.1% being much higher compared to the actual model.</p>
+<p><strong>SIXTH, I carried out the BONUS task and performed 10-fold cross-validation on my model.</strong></p>
+<pre class="r"><code>loss_func &lt;- function(class, prob) {
+  n_wrong &lt;- abs(class - prob) &gt; 0.5
+  mean(n_wrong)
+}
+loss_func(class = alc$high_use, prob = alc$probability)</code></pre>
+<pre><code>## [1] 0.2189189</code></pre>
+<pre class="r"><code>library(boot)
+cv &lt;- cv.glm(data = alc, cost = loss_func, glmfit = m, K = 10)
+cv$delta[1]</code></pre>
+<pre><code>## [1] 0.2513514</code></pre>
+<p>In my model, the original prediction error was 21.9%. In the 10-fold cross-validation, the mean prediction error increased to 25.1% still being a slightly lower than that of the DataCamp model (25.9%). Consequently, <strong>sex</strong>, <strong>age</strong>, <strong>goout</strong>, and <strong>address</strong> appear to form a bit better combination of explanatory variables than those used in the DataCamp model.</p>
+<p>OBS! I did not carried out the SUPER-BONUS task.</p>
 <hr />
 <p>(more chapters to be added similarly as we proceed with the course!)</p>
 </div>
