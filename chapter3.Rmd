@@ -20,4 +20,88 @@ colnames(alc)[2:36]
 
 The **alc** data set describes students of two Portuguese schools, their age, gender, socio-demographics, free-time including alcohol use, health status, etc. The data set consists of 370 students and 35 variables. Prof. **Paulo Cortez** (http://www3.dsi.uminho.pt/pcortez/Home.html) is the provider of the original data set (**Student Performance Data Set**, https://archive.ics.uci.edu/ml/datasets/Student+Performance).
 
+**THIRD, I selected four potential explanatory variables for alcohol consumption** from the **alc** data set, explored them, and hypothesized their relationships with alcohol consumption.
 
+*This corresponds to the data analysis part of Exercise 3, its 3. and 4. tasks.*
+
+The first potential explanatory variable for alcohol consumption was **sex**, as, in general, there are gender differences in alcohol consumption (Wilsnack et al. 2000 https://onlinelibrary.wiley.com/doi/abs/10.1046/j.1360-0443.2000.95225112.x). I hypothesized that males consume more alcohol and are more often heavy drinkers than females.
+
+```{r}
+library(dplyr); library(ggplot2); library(readr)
+setwd("C:/Users/ariv/Documents/IODS-project/IODS-project/data")
+alc <- read_csv("alc.csv")
+alc %>% group_by(sex, high_use) %>% count
+```
+
+The number of males in the **alc** data is 175, and that of females is 195. Of the 175 males, 70 i.e. 41% are heavy drinkers, whereas of the 195 females only 41 i.e. 21% are heavy drinkers, which appears to support the hypothesis.
+
+The second potential explanatory variable for alcohol consumption was **age**. I expected that the proportion of heavy drinkers increases together with age.
+
+```{r}
+alc %>% group_by(high_use) %>% summarise(count = n(), mean_age = mean(age))
+g1 <- ggplot(alc, aes(x = high_use, y = age))
+g1 + geom_boxplot() + xlab("Heavy drinking") + ylab("Age in years") + ggtitle("Heavy and non-heavy drinking students by age")
+```
+
+The mean age of heavy drinking students was 16.8 years and that of non-heavy drinking students was 16.5 years. Based on the box plot the median age of heavy-drinking students was 17 years and that of non-heavy drinking students was 16 years. Thus, the age distribution slightly suggested that heavy-drinking students are older.
+
+The third potential explanatory variable for alcohol consumption was **goout** that indicates going out with friends as a numeric values from 1 (very low frequency) to 5 (very high frequency). By and large, friends' drinking behavior is related to adolescents' drinking (Bot et al. 2005 https://www.sciencedirect.com/science/article/pii/S0306460304003314) and, consequently, I expected going out with friends associates with heavy-drinking also in the *alc* data.
+
+```{r}
+g2 <- ggplot(alc, aes(x = high_use, y = goout))
+g2 + geom_boxplot() + xlab("Heavy drinking") + ylab("Going out intensity") + ggtitle("Heavy and non-heavy drinking students by going out with friends")
+```
+
+The distribution of the **goout** variable suggested that heavy drinking students go out with friends more frequently and/or with higher intensity than non-heavy drinking students. This supports my hypothesis.
+
+The fourth potential explanatory variable for alcohol consumption was **address** that indicates living in an urban (U) or rural area (R). I chose this variable because in some European countries, such as Germany, adolescents living in rural areas appear to be more susceptible to drinking problems (Donath et al. 2011 https://bmcpublichealth.biomedcentral.com/articles/10.1186/1471-2458-11-84).
+
+```{r}
+alc %>% group_by(address, high_use) %>% count
+```
+
+In the **alc** data, the number of students living in rural areas was 81 and that of students living in urban areas was 289. Of the 81 'rural students', 31 i.e. 38% was heavy drinkers, whereas of the 289 'urban students' only 28% were heavy drinkers. This supports my hypothesis that living in a rural area predispose students to drinking problems.
+
+**FOURTH, I performed logistic regression** to explore the relationship between the four selected explanatory variables (**sex, age, goout, address**) and alcohol consumption. As a target variables, I used the binary **high_use** variable.
+
+```{r}
+m <- glm(high_use ~ sex + age + goout + address, data = alc, family = "binomial")
+summary(m)
+coef(m)
+OR <- coef(m) %>% exp
+CI <- confint(m) %>% exp
+cbind(OR, CI)
+```
+
+Based on the logistic regression model with **sex**, **age**, **goout**, and **address** as explanatory variables, male gender, going out with friends, and living in a rural area increased the odds of being a heavy drinker. The odds of **men** was 2.5-times the odds of women (OR, 95% CI: 2.51, 1.54-4.15). One point increase in the **going out** scale increased the odds by 2.2 (OR, 95% CI: 2.16, 1.71-2.77). The odds of students living in an **urban** area was 0.5-times the odds of students living in a rural area (OR, 95% CI: 0.52, 0.29-0.94). With respect to age, the 95% CI for the OR contained 1, which denotes that age had no statistically significant effect on the OR. The result supported my hypotheses except for age.
+
+**FIFTH, I explored the predictive power of the model.**
+
+```{r}
+m <- glm(high_use ~ sex + age + goout + address, data = alc, family = "binomial")
+probabilities <- predict(m, type = "response")
+alc <- mutate(alc, probability = probabilities)
+alc <- mutate(alc, prediction = probability >0.5)
+select(alc, sex, age, goout, address, high_use, probability, prediction) %>% tail(10)
+table(high_use = alc$high_use, prediction = alc$prediction)
+```
+
+The **training error** of the model i.e. the total proportion on inaccurately classified individuals was (16+65)/(243+16+65+46)*100 = 21.9%. The model was better in predicting non-heavy drinking students. Of the 111 heavy-drinkers the model 'correctly recognized' only 46 (41%), whereas of the 259 non-heavy drinkers the model 'correctly recognized' 243 (94%).
+
+```{r}
+library(dplyr); library(ggplot2)
+g <- ggplot(alc, aes(x = probability, y = high_use, col = prediction))
+g + geom_point()
+table(high_use = alc$high_use, prediction = alc$prediction) %>% prop.table %>% addmargins
+```
+
+To compare the model performance to guessing I created a **guesspred** variable based on random numbers.
+
+```{r}
+alc$guessprop <- runif(370)
+alc$guesspred <- ifelse(alc$guessprop > 0.5, "TRUE","FALSE")
+table(high_use = alc$high_use, prediction = alc$guesspred)
+table(high_use = alc$high_use, prediction = alc$guesspred) %>% prop.table %>% addmargins
+```
+
+In the guessing example, the **training error** was (124+54)/(135+124+54+57)*100 = 48.1% being much higher compared to the actual model.
