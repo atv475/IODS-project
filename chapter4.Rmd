@@ -1,0 +1,34 @@
+
+## Clustering and classification
+
+```{r}
+date()
+```
+**FIRST, I created a new R Markdown file**, named it as 'chapter4.Rmd', and saved it to my folder. Then, I included the new file as a child file in my 'index.Rmd' file.
+
+**SECOND, I load the Boston data set** from the MASS package and explored its structure and dimensions.
+
+```{r}
+library(MASS)
+data("Boston")
+str(Boston)
+summary(Boston)
+```
+
+The **Boston** data consist of 506 rows and 14 columns. It describes demographic, socioeconomic, and environmental characteristics of towns.
+
+References to the data source are as follows:
+
+- Harrison, D. and Rubinfeld, D.L. (1978) Hedonic prices and the demand for clean air. J. Environ. Economics and Management 5, 81–102.
+- Belsley D.A., Kuh, E. and Welsch, R.E. (1980) Regression Diagnostics. Identifying Influential Data and Sources of Collinearity. New York: Wiley.
+
+**THIRD, I graphically and numerically described the Boston data** variables and relationships across them.
+
+```{r}
+library(corrplot)
+library(tidyr)
+pairs(Boston)
+cor_matrix<-cor(Boston) %>% round(digits = 2)
+cor_matrix
+```
+
