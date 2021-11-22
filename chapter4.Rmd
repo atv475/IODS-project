@@ -6,7 +6,7 @@ date()
 ```
 **FIRST, I created a new R Markdown file**, named it as 'chapter4.Rmd', and saved it to my folder. Then, I included the new file as a child file in my 'index.Rmd' file.
 
-**SECOND, I load the Boston data set** from the MASS package and explored its structure and dimensions.
+**SECOND, I loaded the Boston data set** from the MASS package and explored its structure and dimensions.
 
 ```{r}
 library(MASS)
@@ -24,11 +24,39 @@ References to the data source are as follows:
 
 **THIRD, I graphically and numerically described the Boston data** variables and relationships across them.
 
-```{r}
+```{r echo=FALSE}
 library(corrplot)
 library(tidyr)
+library(MASS)
+data("Boston")
+par(mfrow = c(3,5))
+hist(Boston$crim, main="crim", xlab="")
+hist(Boston$zn, main="zn", xlab="")
+hist(Boston$indus, main="indus", xlab="")
+hist(Boston$chas, main="chas", xlab="")
+hist(Boston$nox, main="nox", xlab="")
+hist(Boston$rm, main="rm", xlab="")
+hist(Boston$age, main="age", xlab="")
+hist(Boston$dis, main="dis", xlab="")
+hist(Boston$rad, main="rad", xlab="")
+hist(Boston$tax, main="tax", xlab="")
+hist(Boston$ptratio, main="ptratio", xlab="")
+hist(Boston$black, main="black", xlab="")
+hist(Boston$lstat, main="lstat", xlab="")
+hist(Boston$medv, main="medv", xlab="")
+```
+
+Most **Boston** data variables are not normally distributed. By eye, only **rm** i.e. the average number of rooms per dwelling appears to follow a normal distribution.
+
+```{r echo=FALSE}
+library(corrplot)
+library(tidyr)
+library(MASS)
+data("Boston")
 pairs(Boston)
 cor_matrix<-cor(Boston) %>% round(digits = 2)
 cor_matrix
+corrplot(cor_matrix, method="circle", type="upper", cl.pos="b", tl.pos="d", tl.cex = 0.6)
 ```
 
+There are some strong correlations (*r* >0.70) across the **Boston** data variables. The strong positive correlations are **tax** x **rad** (*r* = 0.91), **nox** x **indus** (*r* = 0.76), **nox** x **age** (*r* = 0.73), and **tax** x **indus** (*r* = 0.72). Correspondingly, the strong negative correlations are **nox** x **dis** (*r* = -0.77), **age** x **dis** (*r* = -0.75), **medv** x **lstat** (*r* = -0.74), and **dis** x **indus** (*r* = -0.71).
