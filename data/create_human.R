@@ -13,14 +13,14 @@ colnames(hd)
 str(hd)
 dim(hd)
 summary(hd)
-#The HD data set consists of 195 rows (countries) and 8 variables to be used to build The Human Development Index (HDI).
+#The HD data set consists of 195 rows (countries) and 8 variables to be used to build the Human Development Index (HDI).
 
 #Exploring the GI data set.
 colnames(gii)
 str(gii)
 dim(gii)
 summary(gii)
-#The GI data set consists of 195 rows (countries) and 10 variables to be used to build The Gender Inequality Index (GII).
+#The GI data set consists of 195 rows (countries) and 10 variables to be used to build the Gender Inequality Index (GII).
 
 #Renaming the HD variables.
 library(tidyverse)
