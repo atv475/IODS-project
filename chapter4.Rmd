@@ -53,7 +53,6 @@ library(corrplot)
 library(tidyr)
 library(MASS)
 data("Boston")
-pairs(Boston)
 cor_matrix<-cor(Boston) %>% round(digits = 2)
 cor_matrix
 corrplot(cor_matrix, method="circle", type="upper", cl.pos="b", tl.pos="d", tl.cex = 0.6)
