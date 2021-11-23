@@ -22,27 +22,48 @@ dim(gii)
 summary(gii)
 #The GI data set consists of 195 rows (countries) and 10 variables to be used to build the Gender Inequality Index (GII).
 
-#Renaming the HD variables.
-library(tidyverse)
-colnames(hd)
-rename(hd, HDIrank = HDI.Rank
-       , HDI = Human.Development.Index..HDI.
-       , LE = Life.Expectancy.at.Birth
-       , EDUCexp = Expected.Years.of.Education
-       , EDUCmean = Mean.Years.of.Education
-       , GNI = Gross.National.Income..GNI..per.Capita
-       , GNIHDI = GNI.per.Capita.Rank.Minus.HDI.Rank
-       )
+#Renaming the HD variables
+library(dplyr)
+hd <- transmute(hd, HDI.Rank = HDI.Rank
+                , Country = Country
+                , HDI = Human.Development.Index..HDI.
+                , Life.Exp = Life.Expectancy.at.Birth
+                , Edu.Exp = Expected.Years.of.Education
+                , Edu.Mean = Mean.Years.of.Education
+                , GNI = Gross.National.Income..GNI..per.Capita
+                , GNI.Minus.Rank = GNI.per.Capita.Rank.Minus.HDI.Rank
+                )
+names(hd)
 
 #Renaming the GI variables.
-colnames(gii)
-rename(gii, GIIrank = GIIrank
-       , GII = Gender.Inequality.Index..GII.
-       , MMR = Maternal.Mortality.Ratio
-       , ABR = Adolescent.Birth.Rate
-       , Parl = Percent.Representation.in.Parliament
-       , EDUCF = Population.with.Secondary.Education..Female.
-       , EDUCM = Population.with.Secondary.Education..Male.
-       , LABF = Labour.Force.Participation.Rate..Female.
-       , LABM = Labour.Force.Participation.Rate..Male.
-       )
+gii <- transmute(gii, GII.Rank = GII.Rank
+                 , Country = Country
+                 , GII = Gender.Inequality.Index..GII.
+                 , Mat.Mor = Maternal.Mortality.Ratio
+                 , Ado.Birth = Adolescent.Birth.Rate
+                 , Parli.F = Percent.Representation.in.Parliament
+                 , Edu2.F = Population.with.Secondary.Education..Female.
+                 , Edu2.M = Population.with.Secondary.Education..Male.
+                 , Labo.F = Labour.Force.Participation.Rate..Female.
+                 , Labo.M = Labour.Force.Participation.Rate..Male.
+                 )
+names(gii)
+
+#Creating new variables to the GI data set.
+gii <- mutate(gii, Edu2.FM = Edu2.F / Edu2.M
+              , Labo.FM = Labo.F / Labo.M
+              )
+names(gii)
+
+#Joining the HD and GI data sets.
+human <- inner_join(hd, gii, by = "Country")
+colnames(human)
+str(human)
+glimpse(human)
+
+#There are now 195 rows (countries) and 19 columns in the human data set.
+
+#Saving the human data set to the 'data' folder.
+write.csv(human, file = "human.csv")
+read.csv("human.csv")
+head(human)
