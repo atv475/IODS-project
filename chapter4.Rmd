@@ -66,3 +66,68 @@ corrplot(cor_matrix, method="circle", type="upper", cl.pos="b", tl.pos="d", tl.c
 ```
 
 There are some strong correlations (*r* >0.70) across the **Boston** data variables. The strong positive correlations are **tax** x **rad** (*r* = 0.91), **nox** x **indus** (*r* = 0.76), **nox** x **age** (*r* = 0.73), and **tax** x **indus** (*r* = 0.72). Correspondingly, the strong negative correlations are **nox** x **dis** (*r* = -0.77), **age** x **dis** (*r* = -0.75), **medv** x **lstat** (*r* = -0.74), and **dis** x **indus** (*r* = -0.71).
+
+**FOURTH, I standardized the Boston data set, modified the crime rate variable, and divided the data set to train and test sets.**
+
+```{r}
+library(MASS)
+data("Boston")
+boston_scaled <- scale(Boston)
+summary(boston_scaled)
+```
+
+Standardization re-scaled the variables. After the standardization, respective means and standard deviations of the variables are 0 and 1.
+
+```{r}
+boston_scaled <- as.data.frame(boston_scaled)
+bins <- quantile(boston_scaled$crim)
+bins
+crime <- cut(boston_scaled$crim, breaks = bins, include.lowest = TRUE, labels = c("low", "med_low", "med_high", "high"))
+table(crime)
+boston_scaled <- dplyr::select(boston_scaled, -crim)
+boston_scaled <- data.frame(boston_scaled, crime)
+```
+
+```{r}
+n <- nrow(boston_scaled)
+ind <- sample(n,  size = n * 0.8)
+train <- boston_scaled[ind,]
+test <- boston_scaled[-ind,]
+```
+
+**FIFTH, I fitted the linear discriminant analysis on the Boston train set** using the categorical crime rate as the target variable and all other variables as predictors.
+
+```{r echo=FALSE}
+n <- nrow(boston_scaled)
+ind <- sample(n,  size = n * 0.8)
+train <- boston_scaled[ind,]
+test <- boston_scaled[-ind,]
+lda.fit <- lda(crime ~ ., data = train)
+lda.fit
+lda.arrows <- function(x, myscale = 1, arrow_heads = 0.1, color = "orange", tex = 0.75, choices = c(1,2)){
+  heads <- coef(x)
+  arrows(x0 = 0, y0 = 0, 
+         x1 = myscale * heads[,choices[1]], 
+         y1 = myscale * heads[,choices[2]], col=color, length = arrow_heads)
+  text(myscale * heads[,choices], labels = row.names(heads), 
+       cex = tex, col=color, pos=3)
+}
+classes <- as.numeric(train$crime)
+plot(lda.fit, dimen = 2, col = classes, pch = classes)
+lda.arrows(lda.fit, myscale = 2)
+```
+
+**SIXTH, I predicted the crime rate classes in the Boston test set with the LDA model.**
+
+```{r echo=FALSE}
+n <- nrow(boston_scaled)
+ind <- sample(n,  size = n * 0.8)
+train <- boston_scaled[ind,]
+test <- boston_scaled[-ind,]
+correct_classes <- test$crime
+test <- dplyr::select(test, -crime)
+lda.pred <- predict(lda.fit, newdata = test)
+table(correct = correct_classes, predicted = lda.pred$class)
+```
+
+The **prediction error** of the model was (7+6+6+4+1) / (15+7+6+16+6+4+15+1+32) * 100 = 23.5%. The model was good in recognizing "low" (low + low_med) and "high" (med_high + high) categories. With respect to this dichotomized categorization, the prediction error was only (6 + 4) / 102 * 100 = 9.8%.
