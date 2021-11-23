@@ -130,4 +130,4 @@ lda.pred <- predict(lda.fit, newdata = test)
 table(correct = correct_classes, predicted = lda.pred$class)
 ```
 
-The **prediction error** of the model was (7+6+6+4+1) / (15+7+6+16+6+4+15+1+32) * 100 = 23.5%. The model was good in recognizing "low" (low + low_med) and "high" (med_high + high) categories. With respect to this dichotomized categorization, the prediction error was only (6 + 4) / 102 * 100 = 9.8%.
+The **prediction error** of the model ranged from 18% to 26%. The model was good in recognizing "low" (low + low_med) and "high" (med_high + high) categories. With respect to this dichotomized categorization, the prediction error was c. 10%.
