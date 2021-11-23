@@ -131,3 +131,54 @@ table(correct = correct_classes, predicted = lda.pred$class)
 ```
 
 The **prediction error** of the model ranged from 18% to 26%. The model was good in recognizing "low" (low + low_med) and "high" (med_high + high) categories. With respect to this dichotomized categorization, the prediction error was c. 10%.
+
+**SEVENTH, I run the k-means algorithm on the Boston data set.**
+
+```{r}
+library(ggplot2)
+library(MASS)
+data("Boston")
+boston_scaled <- scale(Boston)
+boston_scaled <- as.data.frame(boston_scaled)
+dist_eu <- dist(boston_scaled)
+summary(dist_eu)
+dist_man <- dist(boston_scaled, method = 'manhattan')
+summary(dist_man)
+km <-kmeans(boston_scaled, centers = 4)
+pairs(boston_scaled[1:6], col = km$cluster)
+set.seed(123)
+k_max <- 10
+twcss <- sapply(1:k_max, function(k){kmeans(boston_scaled, k)$tot.withinss})
+qplot(x = 1:k_max, y = twcss, geom = 'line')
+km <-kmeans(boston_scaled, centers = 2)
+pairs(boston_scaled[1:6], col = km$cluster)
+```
+
+Based on the total of within cluster sum of squares (WCSS), I chose 2 as the optimal number of clusters. Actually, the two clusters solution did not much differ from the four clusters solution, but they both highlighted the same variables, such as **crim** and **zn**, as the most representative factors.
+
+**EIGHT, I performed the BONUS task.**
+
+```{r}
+library(MASS)
+data("Boston")
+boston_scaled <- scale(Boston)
+boston_scaled <- as.data.frame(boston_scaled)
+km <-kmeans(boston_scaled, centers = 4)
+lda.fit2 <- lda(km$cluster ~ ., data = boston_scaled)
+lda.fit2
+lda.arrows <- function(x, myscale = 1, arrow_heads = 0.1, color = "orange", tex = 0.75, choices = c(1,2)){
+  heads <- coef(x)
+  arrows(x0 = 0, y0 = 0, 
+         x1 = myscale * heads[,choices[1]], 
+         y1 = myscale * heads[,choices[2]], col=color, length = arrow_heads)
+  text(myscale * heads[,choices], labels = row.names(heads), 
+       cex = tex, col=color, pos=3)
+}
+classes <- as.numeric(km$cluster)
+plot(lda.fit2, dimen = 2, col = classes, pch = classes)
+lda.arrows(lda.fit2, myscale = 2)
+```
+
+In this four clusters solution, the **Charles River** dummy variable (= 1 if tract bounds river; 0 otherwise) was the main driver of clustering. It separated Cluster 1 from other clusters.
+
+OBS! I did not carried out the SUPER-BONUS task.
