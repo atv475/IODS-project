@@ -4,7 +4,7 @@
 ```{r}
 date()
 ```
-**FIRST, I created a new R Markdown file**, named it as 'chapter3.Rmd', and saved it to my folder. Then, I included the new file as a child file in my 'index.Rmd' file.
+**FIRST, I created a new R Markdown file**, named it as 'chapter3.Rmd', and saved it to my IODS-project folder. Then, I included the new file as a child file in my 'index.Rmd' file.
 
 **SECOND, I read the joined and modified 'alc' data into R from my local folder, and described it briefly.**
 
