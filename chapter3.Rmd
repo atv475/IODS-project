@@ -14,6 +14,7 @@ setwd("C:/Users/ariv/Documents/IODS-project/IODS-project/data")
 alc <- read_csv("alc.csv")
 View(alc)
 ```
+
 ```{r}
 colnames(alc)[2:36]
 ```

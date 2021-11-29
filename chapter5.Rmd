@@ -5,3 +5,51 @@
 date()
 ```
 **FIRST, I created a new R Markdown file**, named it as 'chapter5.Rmd', and saved it to my folder. Then, I included the new file as a child file in my 'index.Rmd' file.
+
+**SECOND, I numerically and graphically described the human data** variables and relationships across them.
+
+```{r echo=FALSE}
+library(readr)
+setwd("C:/Users/ariv/Documents/IODS-project/IODS-project/data")
+human <- read_csv("human.csv")
+summary(human)
+```
+
+```{r echo=FALSE}
+library(corrplot)
+library(tidyr)
+par(mfrow = c(2,4))
+hist(human$Edu2.FM, main="Edu2.FM", xlab="")
+hist(human$Labo.FM, main="Labo.FM", xlab="")
+hist(human$Edu.Exp, main="Edu.Exp", xlab="")
+hist(human$Life.Exp, main="Life.Exp", xlab="")
+hist(human$GNI, main="GNI", xlab="")
+hist(human$Mat.Mor, main="Mat.Mor", xlab="")
+hist(human$Ado.Birth, main="Ado.Birth", xlab="")
+hist(human$Parli.F, main="Parli.F", xlab="")
+```
+
+Most **human** data variables are not normally distributed. By eye, only **Edu.Exp** i.e. the expected years of schooling appears to follow a normal distribution.
+
+```{r echo=FALSE}
+cor(human[,c('Edu2.FM','Labo.FM','Edu.Exp','Life.Exp','GNI','Mat.Mor','Ado.Birth','Parli.F')])
+```
+
+There are a few strong correlations (*r* larger than 0.70 or smaller than -0.70) across the **human** data variables. The strong positive correlations are **Edu.Exp** x **Life.Exp** (*r* = 0.79) and **Mat.Mor** x **Ado.Birth** (*r* = 0.76). Correspondingly, the strong negative correlations are **Life.Exp** x **Mat.Mor** (*r* = -0.86), **Edu.Exp** x **Mat.Mor** (*r* = -0.74), and **Life.Exp** x **Ado.Birth** (*r* = -0.73).
+
+**THIRD, I performed the principal component analysis (PCA) on the non-standardized human data.**
+
+```{r}
+pca_human1 <- prcomp(human[-1])
+biplot(pca_human1, choices = 1:2, cex = c(0.6, 0.6), col = c("grey40", "deeppink2"))
+```
+
+**FOURTH, I performed the principal component analysis (PCA) on the standardized human data.**
+
+```{r}
+human_std <- scale(human[-1])
+pca_human2 <- prcomp(human_std)
+biplot(pca_human2, choices = 1:2, cex = c(0.6, 0.6), col = c("grey40", "deeppink2"))
+```
+
+Text...
