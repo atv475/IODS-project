@@ -4,9 +4,9 @@
 ```{r}
 date()
 ```
-**FIRST, I created a new R Markdown file**, named it as 'chapter5.Rmd', and saved it to my folder. Then, I included the new file as a child file in my 'index.Rmd' file.
+Before the analyses, I created a new R Markdown file, named it as 'chapter5.Rmd', and saved it to my folder. Then, I included the new file as a child file in my 'index.Rmd' file.
 
-**SECOND, I numerically and graphically described the human data** variables and relationships across them.
+**FIRST, I numerically and graphically described the human data** variables and relationships across them.
 
 ```{r echo=FALSE}
 library(readr)
@@ -32,24 +32,69 @@ hist(human$Parli.F, main="Parli.F", xlab="")
 Most **human** data variables are not normally distributed. By eye, only **Edu.Exp** i.e. the expected years of schooling appears to follow a normal distribution.
 
 ```{r echo=FALSE}
-cor(human[,c('Edu2.FM','Labo.FM','Edu.Exp','Life.Exp','GNI','Mat.Mor','Ado.Birth','Parli.F')])
+library(corrplot)
+library(tidyr)
+library(readr)
+human <- read_csv("human.csv")
+human2 <- human[-1]
+cor_matrix<-cor(human2) %>% round(digits = 2)
+cor_matrix
+corrplot(cor_matrix, method="circle", type="upper", cl.pos="b", tl.pos="d", tl.cex = 0.6)
 ```
+
 
 There are a few strong correlations (*r* larger than 0.70 or smaller than -0.70) across the **human** data variables. The strong positive correlations are **Edu.Exp** x **Life.Exp** (*r* = 0.79) and **Mat.Mor** x **Ado.Birth** (*r* = 0.76). Correspondingly, the strong negative correlations are **Life.Exp** x **Mat.Mor** (*r* = -0.86), **Edu.Exp** x **Mat.Mor** (*r* = -0.74), and **Life.Exp** x **Ado.Birth** (*r* = -0.73).
 
-**THIRD, I performed the principal component analysis (PCA) on the non-standardized human data.**
+**SECOND, I performed the principal component analysis (PCA) on the non-standardized human data.**
 
 ```{r}
 pca_human1 <- prcomp(human[-1])
-biplot(pca_human1, choices = 1:2, cex = c(0.6, 0.6), col = c("grey40", "deeppink2"))
+s1 <- summary(pca_human1)
+s1
+pca_pr1 <- round(100*s1$importance[2,], digits = 1)
+pca_pr1
+pc_lab1 <- paste0(names(pca_pr1), " (", pca_pr1, "%)")
+biplot(pca_human1, cex = c(0.6, 0.6), col = c("grey40", "deeppink2"), xlab = pc_lab1[1], ylab = pc_lab1[2], sub = "Money earned by a nation per person explains all variation in the data.")
 ```
 
-**FOURTH, I performed the principal component analysis (PCA) on the standardized human data.**
+**THIRD, I performed the principal component analysis (PCA) on the standardized human data.**
 
 ```{r}
 human_std <- scale(human[-1])
 pca_human2 <- prcomp(human_std)
-biplot(pca_human2, choices = 1:2, cex = c(0.6, 0.6), col = c("grey40", "deeppink2"))
+s2 <- summary(pca_human2)
+s2
+pca_pr2 <- round(100*s2$importance[2,], digits = 1)
+pca_pr2
+biplot(pca_human2, cex = c(0.5, 0.5), col = c("grey40", "deeppink2"), xlab = "PC1 (54%) Education, life-expectancy, and maternal weel-being", ylab = "PC2 (16%) Female participation in the society")
 ```
 
-Text...
+The results of the first PCA based on non-standardized variables differed from those of the second PCA based on standardized variables. In the first, the components represent mainly the variable scales and, consequently, the gross national income per capita (GNI) with much larger values and standard deviation compared to other variables explains, practically, all variation in the data.
+
+**FOURTH, I interpreted the principal components (PC) of the PCA based on the standardized human data.**
+
+The first PC explained 54% of variation in the data. It associated positively with education and life-expectancy and negatively with poor maternal well-being including maternal mortality and adolescent birth rate. These two aspects, high education and poor maternal well-being, can be understood as contradictory indicators for the condition of society.
+
+The second PC explained 16% of variation in the data. It associated positively with female participation in the society including proportions of females in the labor force and parliament. This PC indicates how well females are able to affect the society via working life and politics.
+
+**FIFTH, I carried out the Multiple Correspondence Analysis (MCA) task.**
+
+```{r}
+library(FactoMineR)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(factoextra)
+data("tea")
+tea_time <- tea[, c(4,13:17)]
+summary(tea_time)
+str(tea_time)
+dim(tea_time)
+gather(tea_time) %>% ggplot(aes(value)) + facet_wrap("key", scales = "free") + geom_bar() + theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
+mca <- MCA(tea_time, graph = FALSE)
+summary(mca)
+fviz_screeplot(mca, addlabels = TRUE, ylim = c(0, 20))
+plot(mca, invisible=c("ind"), habillage = "quali", graph.type = "classic")
+```
+
+The MCA was performed on 300 individuals and six variables describing their habits of tea drinking. The first four dimensions explained over 50% of variation in the data (see the scree plot). In a biplot, distances between points represent similarity (short distance) or dissimilarity (long distance) between variables. In the biplot based on Dimensions 1 and 2, variables describing the use of sugar and the role of lunch in tea drinking are located rather close to each other, which indicates similarity across these variable categories. Moreover, the **how** and **where** variable categories are closely associated with each other so that **unpackaged** relates to **tea shop** and **tea bag** relates to **chain store**. These two categories, **how** and **where**, result in the highest eta^2^-values in Dimensions 1 and 2.
