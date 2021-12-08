@@ -63,3 +63,44 @@ ggplot(RATSS, aes(x = Time, y = mean, linetype = Group, shape = Group)) +
 
 Mean response profiles for the three treatment groups show no differences across diets with respect to standardized weight gain.
 
+```{r}
+RATSL8S <- RATSL %>%
+  group_by(Group, ID) %>%
+  summarise( mean=mean(stdweight) ) %>%
+  ungroup()
+glimpse(RATSL8S)
+ggplot(RATSL8S, aes(x = Group, y = mean)) +
+  geom_boxplot() +
+  stat_summary(fun = "mean", geom = "point", shape=23, size=4, fill = "white") +
+  scale_y_continuous(name = "Mean(StdWeight), WD1-WD64")
+```
+
+Box plots of standardized mean summary weights by the three treatment groups suggest one outlier per Group.
+
+```{r}
+RATSL8S1 <- RATSL8S %>%
+  filter(between(mean, -1, 1))
+glimpse(RATSL8S1)
+ggplot(RATSL8S1, aes(x = Group, y = mean)) +
+  geom_boxplot() +
+  stat_summary(fun = "mean", geom = "point", shape=23, size=4, fill = "white") +
+  scale_y_continuous(name = "Mean(StdWeight), WD1-WD64")
+```
+
+After removing the outliers, the box plots indicate differences across diets with respect to standardized weight gain. Group 2 has gained less weight.
+
+```{r}
+summary(aov(mean ~ Group, data = RATSL8S1, var.equal = TRUE))
+```
+
+One-Way ANOVA verifies the box plot; there is a statistically significant difference in weight gain across diets after removing three outliers. The test P-value for Group is ~0.010.
+
+```{r}
+RATS <- read_csv("RATS.csv")
+RATSL8S2 <- RATSL8S %>%
+  mutate(baseline = RATS$WD1)
+fit <- lm(mean ~ baseline + Group, data = RATSL8S2)
+anova(fit)
+```
+
+Using the first weight values (WD1) as covariates in the ANOVA does not change the interpretation. There still is a statistically significant difference in weight gain across diets. The test P-value for Group is ~0.002.

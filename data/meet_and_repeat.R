@@ -34,7 +34,7 @@ read.csv("BPRSL.csv")
 #SECOND, I operate with the RATS data set.
 
 #Loading the RATS data set into R, exploring it briefly, and converting ID and Group variables to factors.
-#In the RATS study, three groups of rats were put on different diets, and each animal’s body weight in grams was recorded repeatedly approximately weekly over a 9-week period.
+#In the RATS study, three groups of rats were put on different diets, and each animal’s body weight in grams was recorded repeatedly over a 9-week period.
 setwd("C:/Users/ariv/Documents/IODS-project/IODS-project/data")
 getwd()
 RATS <- read.table("https://raw.githubusercontent.com/KimmoVehkalahti/MABS/master/Examples/data/rats.txt", sep  ="\t", header = T)
