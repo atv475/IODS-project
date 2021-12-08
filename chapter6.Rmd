@@ -45,7 +45,7 @@ ggplot(RATSL, aes(x = Time, y = stdweight, linetype = ID)) +
 Individual response profiles of **standardized weights** emphasize differences across individuals.
 
 ```{r}
-n <- 16
+n <- 6 #In Group 1 n = 8, Group 2 n = 4, and Group 3 n = 3.
 RATSS <- RATSL %>%
   group_by(Group, Time) %>%
   summarise( mean = mean(stdweight), se = sd(stdweight)/sqrt(n) ) %>%
@@ -61,7 +61,7 @@ ggplot(RATSS, aes(x = Time, y = mean, linetype = Group, shape = Group)) +
   scale_y_continuous(name = "Mean(StdWeight) +/- SE(StdWeight)")
 ```
 
-Mean response profiles for the three treatment groups show no differences across diets with respect to standardized weight gain.
+Mean response profiles for the three treatment groups reveal no difference in weight gain across diets.
 
 ```{r}
 RATSL8S <- RATSL %>%
@@ -87,7 +87,7 @@ ggplot(RATSL8S1, aes(x = Group, y = mean)) +
   scale_y_continuous(name = "Mean(StdWeight), WD1-WD64")
 ```
 
-After removing the outliers, the box plots indicate differences across diets with respect to standardized weight gain. Group 2 has gained less weight.
+After removing the outliers, the box plots indicate difference in weight gain across diets. Group 2 has gained less weight.
 
 ```{r}
 summary(aov(mean ~ Group, data = RATSL8S1, var.equal = TRUE))
@@ -104,3 +104,99 @@ anova(fit)
 ```
 
 Using the first weight values (WD1) as covariates in the ANOVA does not change the interpretation. There still is a statistically significant difference in weight gain across diets. The test P-value for Group is ~0.002.
+
+**SECOND, I implemented the analyses of Chapter 9 of MABS using the BPRS data.**
+
+Before plotting the data and running the analyses, I added unique IDs for the subjects. In the original data, the **subject** variable does not distinguish the subjects by the treatment, only within the treatments.
+
+```{r}
+library(readr)
+BPRSL <- read_csv("data/BPRSL.csv", col_types = cols(treatment = col_factor(levels = c("1", 
+    "2")), subject = col_factor(levels = c("1", 
+    "2", "3", "4", "5", "6", "7", "8", "9", 
+    "10", "11", "12", "13", "14", "15", "16", 
+    "17", "18", "19", "20"))))
+ID2 <- c(21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40)
+BPRSL <- mutate(BPRSL, ID = ifelse(treatment==1, subject,ID2))
+BPRSL$ID <- factor(BPRSL$ID)
+names(BPRSL)
+summary(BPRSL)
+glimpse(BPRSL)
+```
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+dim(BPRSL)
+ggplot(BPRSL, aes(x = week, y = bprs, group = treatment)) + geom_point(aes(colour = treatment), size = 2)
+BPRSS <- BPRSL %>%
+  group_by(treatment, week) %>%
+  summarise( mean = mean(bprs) ) %>%
+  ungroup()
+ggplot(BPRSS, aes(x = week, y = mean, linetype = treatment, shape = treatment)) +
+  geom_line() +
+  scale_linetype_manual(values = c(1,2)) +
+  theme(legend.position = c(0.8,0.8)) +
+  scale_y_continuous(name = "BPRS")
+ggplot(BPRSL, aes(x = week, y = bprs, linetype = subject)) +
+  geom_line() +
+  scale_linetype_manual(values = rep(1:10, times=4)) +
+  facet_grid(. ~ treatment, labeller = label_both) +
+  theme(legend.position = "none") + 
+  scale_y_continuous(limits = c(min(BPRSL$bprs), max(BPRSL$bprs)))
+ggplot(BPRSL, aes(x = week, y = bprs, group = ID)) +
+  geom_line(aes(linetype = treatment)) +
+  scale_x_continuous(name = "Week", breaks = seq(0, 8)) +
+  scale_y_continuous(name = "BPRS") +
+  theme(legend.position = "top")
+library(readr)
+BPRS <- read_csv("BPRS.csv")
+pairs(BPRS[4:12])
+```
+
+Based on plots, there is no difference in BPRS between the treatments, but there is substantial between-subject variation, and time remarkably affects BPRS. Moreover, time points appear to correlate with each other.
+
+```{r}
+BPRS_reg <- lm(bprs ~ week + treatment, data = BPRSL)
+summary(BPRS_reg)
+```
+
+The multiple linear regression model supports the interpretation based on plots. Week has a statistically significant effect on BPRS, the P-value is extremely low, whereas Treatment has no effect (P-value >>0.05).
+
+```{r}
+library(lme4)
+BPRS_ref <- lmer(bprs ~ week + treatment + (1 | ID), data = BPRSL, REML = FALSE)
+summary(BPRS_ref)
+```
+
+```{r}
+BPRS_ref1 <- lmer(bprs ~ week + treatment + (week | ID), data = BPRSL, REML = FALSE)
+summary(BPRS_ref1)
+anova(BPRS_ref1, BPRS_ref)
+```
+
+```{r}
+BPRS_ref2 <- lmer(bprs ~ week * treatment + (week | ID), data = BPRSL, REML = FALSE)
+summary(BPRS_ref2)
+anova(BPRS_ref2, BPRS_ref1)
+```
+
+AIC/BIC, the lower the better...
+
+```{r}
+ggplot(BPRSL, aes(x = week, y = bprs, group = ID)) +
+  geom_line(aes(linetype = treatment)) +
+  scale_x_continuous(name = "Week", breaks = seq(0, 8)) +
+  scale_y_continuous(name = "BPRS") +
+  theme(legend.position = "top")
+Fitted <- fitted(BPRS_ref2)
+BPRSL <- BPRSL %>% mutate(Fitted)
+ggplot(BPRSL, aes(x = week, y = Fitted, group = ID)) +
+  geom_line(aes(linetype = treatment)) +
+  scale_x_continuous(name = "Week", breaks = seq(0, 8)) +
+  scale_y_continuous(name = "Fitted BPRS") +
+  theme(legend.position = "top")
+```
+
+Text here...
