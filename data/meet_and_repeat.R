@@ -47,7 +47,7 @@ RATS$ID <- factor(RATS$ID)
 RATS$Group <- factor(RATS$Group)
 #RATS data set consists of 16 observations (rows) of 13 variables (columns).
 
-#Converting the RATS data set to long form, adding a week variable to it, and exploring the data set briefly.
+#Converting the RATS data set to long form, adding Time variable to it, and exploring the data set briefly.
 library(dplyr)
 library(tidyr)
 RATSL <- RATS %>% gather(key = WD, value = Weight, -ID, -Group) %>% mutate(Time = as.integer(substr(WD,3,4)))
