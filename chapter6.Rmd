@@ -202,4 +202,4 @@ ggplot(BPRSL, aes(x = week, y = Fitted, group = ID)) +
   theme(legend.position = "top")
 ```
 
-To produce the fitted BPRS I used the RISI model. compared to the observed BPRS the fitted profiles are more straightforward and them simplify the entity, but, all in all, the fitted model was able to capture the process.
+To produce the fitted BPRS I used the RISI model. Compared to the observed BPRS the fitted profiles are more straightforward and them simplify the entity, but, all in all, the fitted model was able to capture the process.
